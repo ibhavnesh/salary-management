@@ -25,9 +25,9 @@ export function createDb(options: DbOptions = {}): Database.Database {
 
   const db = new Database(dbLocation);
 
-  db.pragma('foreign_keys = ON');
+  db.exec('PRAGMA foreign_keys = ON;');
   if (dbLocation !== ':memory:') {
-    db.pragma('journal_mode = WAL');
+    db.exec('PRAGMA journal_mode = WAL;');
   }
 
   return db;

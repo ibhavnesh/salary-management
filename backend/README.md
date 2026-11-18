@@ -14,6 +14,7 @@ src/
 ├── services/       # Core business logic and database orchestration
 ├── controllers/    # HTTP request handling and response formatting
 ├── routes/         # Express routing definitions
+├── seed/           # Deterministic data generation and high-speed batch seeding
 ├── app.ts          # Express application factory and middleware configuration
 └── index.ts        # Server entry point and graceful shutdown handling
 ```
@@ -51,8 +52,31 @@ Database storage uses SQLite via `better-sqlite3` with WAL mode enabled.
 - `npm run dev`: Start the development server with live reload (`tsx watch src/index.ts`)
 - `npm run build`: Compile TypeScript code to `dist/` (`tsc`)
 - `npm run start`: Run compiled code (`node dist/index.js`)
+- `npm run seed`: Seed the database with 10,000 realistic employees
 - `npm test`: Run automated test suites with Vitest using an in-memory SQLite database (`vitest run`)
 - `npm run lint`: Run ESLint checks across TypeScript source files
+
+## Database Seeding
+
+The seed script produces 10,000 realistic employee records spread across 8 countries, 8 departments, and realistic roles with salaries scaled by country factor:
+
+- **Run seed:**
+  ```bash
+  npm run seed
+  ```
+- **Re-seed / overwrite existing data:**
+  ```bash
+  npm run seed -- --force
+  ```
+- **Custom configuration via environment variables:**
+  - `SEED`: Random generator seed number for deterministic output (default: `42`).
+  - `SEED_COUNT`: Number of employees to generate (default: `10000`).
+  - `DATABASE_PATH`: Custom path to target database file.
+
+  Example:
+  ```bash
+  SEED=123 SEED_COUNT=5000 npm run seed -- --force
+  ```
 
 ## Environment Variables
 
