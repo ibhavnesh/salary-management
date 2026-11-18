@@ -102,3 +102,34 @@ export const employeeQuerySchema = z.object({
     .pipe(z.enum(['asc', 'desc']))
     .default('asc'),
 });
+
+export const salaryStatsQuerySchema = z.object({
+  groupBy: z
+    .enum(['country', 'department', 'jobTitle', 'job_title'], {
+      required_error: 'groupBy parameter is required (country, department, or jobTitle)',
+      invalid_type_error: 'groupBy must be country, department, or jobTitle',
+    })
+    .transform((val) => {
+      if (val === 'job_title') return 'jobTitle';
+      return val as 'country' | 'department' | 'jobTitle';
+    }),
+  country: z.string().trim().optional(),
+  department: z.string().trim().optional(),
+});
+
+export const extremesQuerySchema = z.object({
+  country: z
+    .string({ required_error: 'country is required for salary extremes' })
+    .trim()
+    .min(1, 'country is required for salary extremes'),
+  department: z.string().trim().optional(),
+  limit: z.coerce.number().int().min(1).max(100).default(10),
+});
+
+export const distributionQuerySchema = z.object({
+  country: z
+    .string({ required_error: 'country is required for salary distribution' })
+    .trim()
+    .min(1, 'country is required for salary distribution'),
+  bands: z.coerce.number().int().min(1).max(50).default(10),
+});

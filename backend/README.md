@@ -212,6 +212,74 @@ Removes an employee record.
   ```
 - **Errors:** `404 Not Found`.
 
+### 3. Insights Endpoints (`/api/insights`)
+
+Salaries are never aggregated across currencies. Every group includes `currency`. A country maps to one currency, so country-scoped endpoints stay in a single currency.
+
+#### `GET /api/insights/summary`
+Total headcount, headcount per country (with currency), and distinct department and job title counts.
+
+- **Example:** `GET /api/insights/summary`
+- **Response:** `200 OK`
+  ```json
+  {
+    "totalHeadcount": 10000,
+    "byCountry": [
+      { "country": "United States", "currency": "USD", "headcount": 1290 }
+    ],
+    "totalDepartments": 8,
+    "totalJobTitles": 42
+  }
+  ```
+
+#### `GET /api/insights/salary-stats`
+Min, rounded average, median, and max salary per group. `department` and `jobTitle` groups are split by currency. Sorted by headcount descending.
+
+- **Query:** `groupBy` (`country` | `department` | `jobTitle`, required), optional `country`, optional `department`.
+- **Example:** `GET /api/insights/salary-stats?groupBy=department&country=Germany`
+- **Response:** `200 OK`
+  ```json
+  [
+    {
+      "group": "Engineering",
+      "currency": "EUR",
+      "headcount": 160,
+      "min": 33392,
+      "average": 92000,
+      "median": 88000,
+      "max": 200107
+    }
+  ]
+  ```
+- **Errors:** `400 Bad Request` when `groupBy` is missing or not in the whitelist.
+
+#### `GET /api/insights/extremes`
+Highest-paid and lowest-paid employees inside one country. `country` is required so currencies are not compared.
+
+- **Query:** `country` (required), `limit` (default `10`, max `100`), optional `department`.
+- **Example:** `GET /api/insights/extremes?country=United%20States&limit=5&department=Engineering`
+- **Response:** `200 OK` with `{ country, currency, highestPaid, lowestPaid }`.
+- **Errors:** `400 Bad Request` when `country` is missing.
+
+#### `GET /api/insights/distribution`
+Equal-width salary histogram for one country. Band counts sum to that country's headcount.
+
+- **Query:** `country` (required), `bands` (default `10`, max `50`).
+- **Example:** `GET /api/insights/distribution?country=India&bands=10`
+- **Response:** `200 OK`
+  ```json
+  {
+    "country": "India",
+    "currency": "INR",
+    "min": 841068,
+    "max": 5290401,
+    "bands": [
+      { "bandStart": 841068, "bandEnd": 1285851, "count": 900, "currency": "INR" }
+    ]
+  }
+  ```
+- **Errors:** `400 Bad Request` when `country` is missing. Unknown countries return empty `bands`.
+
 ## Environment Variables
 
 - `PORT`: Server port (default: `3001`)
