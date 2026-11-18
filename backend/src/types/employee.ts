@@ -30,3 +30,30 @@ export interface EmployeeRow {
 
 export type CreateEmployeeInput = Omit<Employee, 'id' | 'createdAt' | 'updatedAt'>;
 export type UpdateEmployeeInput = Partial<CreateEmployeeInput>;
+
+export interface EmployeeQueryParams {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  country?: string;
+  department?: string;
+  jobTitle?: string;
+  minSalary?: number;
+  maxSalary?: number;
+  sortBy?: 'salary' | 'hire_date' | 'last_name' | 'country' | 'department';
+  sortOrder?: 'asc' | 'desc';
+}
+
+export interface PaginatedEmployeesResponse {
+  data: Employee[];
+  page: number;
+  pageSize: number;
+  total: number;
+  totalPages: number;
+}
+
+export interface EmployeeFilterOptions {
+  countries: string[];
+  departments: string[];
+  jobTitles: string[];
+}

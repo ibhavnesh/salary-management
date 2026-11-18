@@ -1,4 +1,6 @@
 export * from './employee';
+export * from './schemas';
+export * from './errors';
 
 export interface HealthCheckResult {
   status: 'ok' | 'error';
