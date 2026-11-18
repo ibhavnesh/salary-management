@@ -17,3 +17,8 @@ Notes: an Application Control policy on my Windows machine blocked Rollup's nati
 ### Step 3: Seed script
 Prompt: seed script for 10,000 employees with faker, deterministic seed, 8 countries with local currencies, realistic departments/titles/salaries, pure generator function, transactional insert, idempotent with --force, tests.
 Result: accepted. Verified: 15 tests passing, DB has 10,000 employees across 8 countries, currencies match countries.
+
+### Step 4: Employee REST API
+Prompt: employee CRUD API with server-side pagination, search, filters, sorting, zod validation, consistent errors (400/404/409), parameterized SQL with sort whitelist, filters endpoint, Supertest tests.
+Result: accepted. 22 new API tests, 37 tests passing in total. Verified manually in the browser: pagination (total 10000), country filter with salary sort, search, filters endpoint, 404 for a missing id.
+Notes: port 3001 was in use by an old dev server, so I stopped it and restarted.
