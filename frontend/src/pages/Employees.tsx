@@ -1,8 +1,5 @@
 import {
   Box,
-  CircularProgress,
-  Paper,
-  TableContainer,
   Alert,
   Typography,
   Button,
@@ -30,7 +27,7 @@ export default function EmployeesPage() {
     country: '',
     department: '',
     jobTitle: '',
-    sortBy: 'hireDate',
+    sortBy: 'hire_date',
     sortOrder: 'desc' as 'asc' | 'desc',
   });
 
@@ -85,7 +82,7 @@ export default function EmployeesPage() {
       country: '',
       department: '',
       jobTitle: '',
-      sortBy: 'hireDate',
+      sortBy: 'hire_date',
       sortOrder: 'desc',
     });
     setPage(1);
@@ -161,19 +158,10 @@ export default function EmployeesPage() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', padding: 4 }}>
-        <CircularProgress />
-        <Typography sx={{ ml: 1 }}>Loading…</Typography>
-      </Box>
-    );
-  }
-
   if (error) {
     return (
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 4 }}>
-        <Alert severity="error">{error.message}</Alert>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 4, gap: 2 }}>
+        <Alert severity="error" sx={{ width: '100%', maxWidth: 600 }}>{error.message}</Alert>
         <Button variant="contained" onClick={() => refetch()}>
           Retry
         </Button>
@@ -187,48 +175,64 @@ export default function EmployeesPage() {
   const filterOptions: FilterOptions = filterData || { countries: [], departments: [], jobTitles: [] };
 
   return (
-    <Box sx={{ padding: 3 }}>
-      <Paper sx={{ padding: 2 }}>
-        <Stack direction="row" spacing={2} sx={{ flexWrap: 'wrap', alignItems: 'center' }}>
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={handleAdd}
-          >
-            Add employee
-          </Button>
-          <Typography sx={{ flexGrow: 1 }} />
-        </Stack>
-        <DirectoryControls
-          search={filters.search}
-          onSearchChange={handleSearchChange}
-          country={filters.country}
-          department={filters.department}
-          jobTitle={filters.jobTitle}
-          onFilterChange={handleFilterChange}
-          countries={filterOptions.countries}
-          departments={filterOptions.departments}
-          jobTitles={filterOptions.jobTitles}
-          page={page}
-          pageSize={pageSize}
-          total={total}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-          onPageSizeChange={handlePageSizeChange}
-          onReset={handleReset}
-          isFilterLoading={isFilterLoading}
-        />
-      </Paper>
-      <TableContainer sx={{ mt: 2 }}>
-        <EmployeeTable
-          employees={employees}
-          onSort={handleSortChange}
-          currentSortBy={filters.sortBy}
-          currentSortOrder={filters.sortOrder}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
-      </TableContainer>
+    <Box>
+      {/* Header Row */}
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        sx={{ mb: 3 }}
+      >
+        <Box>
+          <Typography variant="h5" component="h1" sx={{ fontWeight: 700, color: '#111827', letterSpacing: '-0.025em' }}>
+            Employees
+          </Typography>
+          <Typography variant="body2" sx={{ color: '#6B7280', mt: 0.5 }}>
+            Manage organization personnel records and salaries ({total.toLocaleString()} total)
+          </Typography>
+        </Box>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={handleAdd}
+          sx={{ backgroundColor: '#2563EB', '&:hover': { backgroundColor: '#1D4ED8' }, boxShadow: 'none' }}
+        >
+          Add employee
+        </Button>
+      </Stack>
+
+      {/* Filter Toolbar */}
+      <DirectoryControls
+        search={filters.search}
+        onSearchChange={handleSearchChange}
+        country={filters.country}
+        department={filters.department}
+        jobTitle={filters.jobTitle}
+        onFilterChange={handleFilterChange}
+        countries={filterOptions.countries}
+        departments={filterOptions.departments}
+        jobTitles={filterOptions.jobTitles}
+        onReset={handleReset}
+        isFilterLoading={isFilterLoading}
+      />
+
+      {/* Table */}
+      <EmployeeTable
+        employees={employees}
+        isLoading={isLoading}
+        onSort={handleSortChange}
+        currentSortBy={filters.sortBy}
+        currentSortOrder={filters.sortOrder}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        page={page}
+        pageSize={pageSize}
+        total={total}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+        onPageSizeChange={handlePageSizeChange}
+        onResetFilters={handleReset}
+      />
 
       <EmployeeForm
         open={formOpen}
@@ -251,7 +255,7 @@ export default function EmployeesPage() {
         open={snackbarOpen}
         autoHideDuration={4000}
         onClose={() => setSnackbarOpen(false)}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
         <Alert onClose={() => setSnackbarOpen(false)} severity={snackbarSeverity} sx={{ width: '100%' }}>
           {snackbarMessage}
@@ -276,19 +280,28 @@ function DialogDeleteConfirm({
   onConfirm,
   isDeleting,
 }: DialogDeleteConfirmProps) {
-  const message = employee
-    ? `Are you sure you want to delete ${employee.firstName} ${employee.lastName}?`
-    : 'Are you sure you want to delete this employee?';
+  const name = employee ? `${employee.firstName} ${employee.lastName}` : 'this employee';
+  const message = `Are you sure you want to delete ${name}? This action cannot be undone.`;
 
   return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Delete Employee</DialogTitle>
-      <DialogContent>{message}</DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="inherit">
+    <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
+      <DialogTitle sx={{ fontWeight: 600 }}>Delete Employee</DialogTitle>
+      <DialogContent>
+        <Typography variant="body2" sx={{ color: '#4B5563' }}>
+          {message}
+        </Typography>
+      </DialogContent>
+      <DialogActions sx={{ px: 3, pb: 2.5 }}>
+        <Button onClick={onClose} color="inherit" sx={{ color: '#4B5563' }}>
           Cancel
         </Button>
-        <Button onClick={onConfirm} variant="contained" color="error" disabled={isDeleting}>
+        <Button
+          onClick={onConfirm}
+          variant="contained"
+          color="error"
+          disabled={isDeleting}
+          sx={{ backgroundColor: '#DC2626', '&:hover': { backgroundColor: '#B91C1C' }, boxShadow: 'none' }}
+        >
           {isDeleting ? 'Deleting...' : 'Delete'}
         </Button>
       </DialogActions>

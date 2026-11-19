@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
 import React from 'react';
@@ -154,6 +154,13 @@ describe('InsightsPage', () => {
 
     expect(screen.getByText(/never mixed across currencies/i)).toBeInTheDocument();
 
+    // Wait a tick for filters to populate countries
+    await waitFor(() => {
+      expect(screen.getByRole('tab', { name: /Salary Stats/i })).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByRole('tab', { name: /Salary Stats/i }));
+
     await waitFor(() => {
       expect(screen.getByTestId('salary-stats-table')).toBeInTheDocument();
     });
@@ -166,7 +173,7 @@ describe('InsightsPage', () => {
   it('shows loading state while fetching summary', () => {
     mockFetch.mockImplementation(() => new Promise(() => {}));
     renderWithProviders(<InsightsPage />);
-    expect(screen.getByText(/Loading summary/i)).toBeInTheDocument();
+    expect(screen.getByText(/Loading/i)).toBeInTheDocument();
   });
 
   it('shows error state when summary request fails', async () => {

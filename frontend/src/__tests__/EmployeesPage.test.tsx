@@ -90,13 +90,12 @@ describe('EmployeesPage', () => {
 
     renderWithProviders(<EmployeesPage />);
 
-    expect(screen.getByText(/Loading…/)).toBeInTheDocument();
+    // Table renders even during loading (with skeletons)
+    expect(screen.getByRole('table')).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(screen.getByText('Jane')).toBeInTheDocument();
-      expect(screen.getByText('Doe')).toBeInTheDocument();
-      expect(screen.getByText('Hans')).toBeInTheDocument();
-      expect(screen.getByText('Mueller')).toBeInTheDocument();
+      expect(screen.getByText(/Jane Doe/)).toBeInTheDocument();
+      expect(screen.getByText(/Hans Mueller/)).toBeInTheDocument();
       expect(screen.getByText('$140,000')).toBeInTheDocument();
     });
   });
@@ -105,7 +104,7 @@ describe('EmployeesPage', () => {
     mockFetch.mockImplementation(() => new Promise(() => {}));
 
     renderWithProviders(<EmployeesPage />);
-    expect(screen.getByText(/Loading…/)).toBeInTheDocument();
+    expect(screen.getByRole('table')).toBeInTheDocument();
   });
 
   it('shows error state with retry button on failure', async () => {
@@ -137,7 +136,7 @@ describe('EmployeesPage', () => {
     renderWithProviders(<EmployeesPage />);
 
     await waitFor(() => {
-      expect(screen.getByText(/No employees found./)).toBeInTheDocument();
+      expect(screen.getByText(/No employees found/)).toBeInTheDocument();
     });
   });
 
@@ -155,7 +154,7 @@ describe('EmployeesPage', () => {
     renderWithProviders(<EmployeesPage />);
 
     await waitFor(() => {
-      expect(screen.getByText('Jane')).toBeInTheDocument();
+      expect(screen.getByText(/Jane Doe/)).toBeInTheDocument();
     });
 
     // Click delete icon for Jane Doe (first row)
