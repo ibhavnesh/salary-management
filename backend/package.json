@@ -13,6 +13,7 @@
     "lint": "eslint src"
   },
   "dependencies": {
+    "@faker-js/faker": "^9.4.0",
     "better-sqlite3": "^11.8.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -21,7 +22,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.18.0",
-    "@faker-js/faker": "^9.4.0",
     "@rollup/wasm-node": "^4.68.5",
     "@types/better-sqlite3": "^7.6.12",
     "@types/cors": "^2.8.17",
