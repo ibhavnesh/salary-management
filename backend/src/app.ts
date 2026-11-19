@@ -11,7 +11,23 @@ export function createApp(dbInstance?: Database.Database): Express {
   const app = express();
   const db = dbInstance || getDb();
 
-  app.use(cors());
+  app.use(cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps, curl, or same-origin static file serving)
+      if (!origin) return callback(null, true);
+      const allowedOrigins = [
+        'https://salary-management-production-c446091b.up.railway.app',
+        'http://localhost:5173',
+        'http://localhost:3001',
+      ];
+      if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV !== 'production') {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+  }));
   app.use(express.json());
 
   // Mount application routes (/health, /api/employees, /api/insights)

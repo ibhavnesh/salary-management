@@ -14,7 +14,9 @@ import {
   DistributionParams,
 } from '../types';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const API_BASE = import.meta.env.VITE_API_URL || (
+  import.meta.env.DEV ? 'http://localhost:3001' : ''
+);
 
 function buildUrl(path: string, params?: Record<string, string | number | undefined>): string {
   const url = new URL(`${API_BASE}${path}`);
