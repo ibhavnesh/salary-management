@@ -1,0 +1,17 @@
+{
+  "name": "salary-management",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ACME Salary Management Tool",
+  "scripts": {
+    "build:frontend": "cd frontend && npm install && npm run build",
+    "build:backend": "cd backend && npm install && npm run build",
+    "build:all": "npm run build:frontend && npm run build:backend",
+    "start": "node backend/dist/index.js",
+    "test:backend": "cd backend && npm test",
+    "test:frontend": "cd frontend && npm test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

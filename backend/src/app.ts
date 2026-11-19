@@ -1,5 +1,7 @@
 import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
+import path from 'path';
+import fs from 'fs';
 import Database from 'better-sqlite3';
 import { getDb } from './db';
 import { createRoutes } from './routes';
@@ -12,10 +14,33 @@ export function createApp(dbInstance?: Database.Database): Express {
   app.use(cors());
   app.use(express.json());
 
-  // Mount application routes
+  // Mount application routes (/health, /api/employees, /api/insights)
   app.use('/', createRoutes(db));
 
-  // 404 handler for unmatched routes
+  // In production, serve built frontend static files and provide SPA fallback
+  if (process.env.NODE_ENV === 'production') {
+    const frontendDist = process.env.FRONTEND_DIST || path.resolve(__dirname, '../../frontend/dist');
+    if (fs.existsSync(frontendDist)) {
+      app.use(express.static(frontendDist));
+      app.get('*', (req: Request, res: Response, next: NextFunction) => {
+        if (req.path.startsWith('/api')) {
+          return next();
+        }
+        res.sendFile(path.join(frontendDist, 'index.html'), (err) => {
+          if (err) {
+            next(err);
+          }
+        });
+      });
+    }
+  }
+
+  // Unknown /api/* routes must return JSON 404
+  app.use('/api', (_req: Request, res: Response) => {
+    res.status(404).json({ error: 'Not Found' });
+  });
+
+  // General 404 handler for unmatched routes
   app.use((_req: Request, res: Response) => {
     res.status(404).json({ error: 'Not Found' });
   });

@@ -152,6 +152,39 @@ npm run dev         # Starts Vite dev server on port 5173 (proxies /api to local
 
 ---
 
+## Deployment & Docker
+
+The application is packaged as a single deployable service where the Express backend serves both the REST API and the production-built React frontend SPA.
+
+### Environment Variables
+- `PORT`: Server port (default: `3001`).
+- `DATABASE_PATH`: Path to SQLite database file (default: `./salary.db` or `/data/salary.db` in Docker).
+- `NODE_ENV`: Set to `production` to enable static frontend serving and SPA fallback.
+- `SEED_ON_EMPTY`: Automatically seeds 10,000 employees on startup if the database is empty (`true` by default).
+- `FRONTEND_DIST`: Path to built frontend files.
+
+### Building & Running Locally (Production Mode)
+```bash
+npm run build:all       # Builds frontend then backend
+NODE_ENV=production npm start   # Starts production server on http://localhost:3001
+```
+
+### Docker Deployment
+A multi-stage `Dockerfile` is provided at the root:
+```bash
+docker build -t salary-management .
+docker run -p 3001:3001 -v salary_data:/data salary-management
+```
+
+### Deploying to Railway / Render / Fly.io
+1. Connect your repository to your PaaS provider.
+2. Set build command: `npm run build:all`
+3. Set start command: `npm start`
+4. Attach a persistent volume mounted at `/data` and set `DATABASE_PATH=/data/salary.db`.
+5. Set `NODE_ENV=production`.
+
+---
+
 ## How AI Was Used
 
 AI (powered by Kilo and Gemini) was used interactively to assist with architecture planning, writing layered services/repositories, implementing SQL CTE window functions for median calculation, constructing React components with Material UI v6 and Recharts, and writing comprehensive test suites. All code was reviewed, verified, and tested against the repository requirements.
