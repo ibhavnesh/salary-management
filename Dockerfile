@@ -36,8 +36,7 @@ WORKDIR /app/backend
 ENV NODE_ENV=production
 ENV PORT=3001
 ENV DATABASE_PATH=/data/salary.db
-ENV FRONTEND_DIST=../frontend/dist
-
+ENV FRONTEND_DIST=/app/frontend/dist
 EXPOSE 3001
 
 CMD ["node", "dist/index.js"]
