@@ -14,7 +14,7 @@ describe('Employee REST API (/api/employees)', () => {
   beforeEach(() => {
     db = initDb({ inMemory: true });
     // Seed with small deterministic dataset (30 employees)
-    seedDatabase(db, { count: 30, seed: 12345, force: true });
+    seedDatabase(db, { count: 30, seed: 12345, force: true, quiet: true });
     app = createApp(db);
   });
 

@@ -99,21 +99,21 @@ describe('seedDatabase', () => {
 
   it('seeds data into the database using transactions and handles idempotency', () => {
     // Initial seed
-    const result1 = seedDatabase(db, { count: 50, seed: 42 });
+    const result1 = seedDatabase(db, { count: 50, seed: 42, quiet: true });
     expect(result1.inserted).toBe(50);
 
     const countRow1 = db.prepare('SELECT COUNT(*) as total FROM employees').get() as { total: number };
     expect(countRow1.total).toBe(50);
 
     // Re-run without force: should skip
-    const result2 = seedDatabase(db, { count: 50, seed: 42, force: false });
+    const result2 = seedDatabase(db, { count: 50, seed: 42, force: false, quiet: true });
     expect(result2.inserted).toBe(0);
 
     const countRow2 = db.prepare('SELECT COUNT(*) as total FROM employees').get() as { total: number };
     expect(countRow2.total).toBe(50);
 
     // Re-run with force: should re-seed
-    const result3 = seedDatabase(db, { count: 75, seed: 43, force: true });
+    const result3 = seedDatabase(db, { count: 75, seed: 43, force: true, quiet: true });
     expect(result3.inserted).toBe(75);
 
     const countRow3 = db.prepare('SELECT COUNT(*) as total FROM employees').get() as { total: number };
