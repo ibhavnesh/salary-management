@@ -22,3 +22,8 @@ Result: accepted. Verified: 15 tests passing, DB has 10,000 employees across 8 c
 Prompt: employee CRUD API with server-side pagination, search, filters, sorting, zod validation, consistent errors (400/404/409), parameterized SQL with sort whitelist, filters endpoint, Supertest tests.
 Result: accepted. 22 new API tests, 37 tests passing in total. Verified manually in the browser: pagination (total 10000), country filter with salary sort, search, filters endpoint, 404 for a missing id.
 Notes: port 3001 was in use by an old dev server, so I stopped it and restarted.
+
+### Step 5: Insights API
+Prompt: insights endpoints (summary, salary-stats by country/department/jobTitle, extremes, distribution) with a rule to never mix currencies, median via SQL, zod validation, tests, README docs.
+Result: accepted. 10 new insights tests; 47 tests passing in total; build and lint are clean. Verified manually in the browser.
+Notes: the Kilo task hung for about 20 minutes on the final step, so I cancelled it after confirming tests passed.
