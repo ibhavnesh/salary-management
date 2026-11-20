@@ -73,11 +73,44 @@ export default function EmployeeForm({
         },
   });
 
-  const { register, formState: { errors, isSubmitting } } = methods;
+  const { register, reset, formState: { errors, isSubmitting } } = methods;
 
   const [serverError, setServerError] = React.useState<string | null>(null);
   const [countryInput, setCountryInput] = React.useState(employee?.country ?? '');
   const countryValue = methods.watch('country');
+
+  React.useEffect(() => {
+    if (open) {
+      setServerError(null);
+      if (employee) {
+        setCountryInput(employee.country ?? '');
+        reset({
+          firstName: employee.firstName,
+          lastName: employee.lastName,
+          email: employee.email,
+          jobTitle: employee.jobTitle,
+          department: employee.department,
+          country: employee.country,
+          currency: employee.currency,
+          salary: employee.salary,
+          hireDate: employee.hireDate,
+        });
+      } else {
+        setCountryInput('');
+        reset({
+          firstName: '',
+          lastName: '',
+          email: '',
+          jobTitle: '',
+          department: '',
+          country: '',
+          currency: 'USD',
+          salary: 0,
+          hireDate: '',
+        });
+      }
+    }
+  }, [open, employee, reset]);
 
   const handleCountryChange = (value: string) => {
     setCountryInput(value);

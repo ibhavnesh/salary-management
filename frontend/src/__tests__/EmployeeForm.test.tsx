@@ -146,7 +146,141 @@ describe('EmployeeForm UI', () => {
     expect(
       (document.getElementById('form-email') as HTMLInputElement).value
     ).toBe('jane.doe@acme.corp');
+    expect(
+      (document.getElementById('form-jobTitle') as HTMLInputElement).value
+    ).toBe('Engineer');
+    expect(
+      (document.getElementById('form-department') as HTMLInputElement).value
+    ).toBe('Engineering');
+    expect(
+      (document.getElementById('form-currency') as HTMLInputElement).value
+    ).toBe('USD');
+    expect(
+      (document.getElementById('form-salary') as HTMLInputElement).value
+    ).toBe('120000');
+    expect(
+      (document.getElementById('form-hireDate') as HTMLInputElement).value
+    ).toBe('2023-05-10');
     expect(screen.getByText('Save')).toBeInTheDocument();
+  });
+
+  it('opening Add after Edit shows a blank form', async () => {
+    const { rerender } = renderWithProviders(
+      <EmployeeForm
+        open
+        onClose={() => {}}
+        employee={{
+          id: 1,
+          firstName: 'Jane',
+          lastName: 'Doe',
+          email: 'jane.doe@acme.corp',
+          jobTitle: 'Engineer',
+          department: 'Engineering',
+          country: 'United States',
+          currency: 'USD',
+          salary: 120000,
+          hireDate: '2023-05-10',
+        }}
+        filterOptions={filterOptions}
+        onSuccess={() => {}}
+        onError={() => {}}
+      />
+    );
+
+    expect(
+      (document.getElementById('form-firstName') as HTMLInputElement).value
+    ).toBe('Jane');
+
+    // Rerender with undefined employee (Add mode)
+    rerender(
+      <QueryClientProvider client={new QueryClient()}>
+        <BrowserRouter>
+          <EmployeeForm
+            open
+            onClose={() => {}}
+            employee={undefined}
+            filterOptions={filterOptions}
+            onSuccess={() => {}}
+            onError={() => {}}
+          />
+        </BrowserRouter>
+      </QueryClientProvider>
+    );
+
+    expect(
+      (document.getElementById('form-firstName') as HTMLInputElement).value
+    ).toBe('');
+    expect(
+      (document.getElementById('form-lastName') as HTMLInputElement).value
+    ).toBe('');
+    expect(screen.getByText('Create')).toBeInTheDocument();
+  });
+
+  it('editing a different employee shows that employee s values', async () => {
+    const { rerender } = renderWithProviders(
+      <EmployeeForm
+        open
+        onClose={() => {}}
+        employee={{
+          id: 1,
+          firstName: 'Jane',
+          lastName: 'Doe',
+          email: 'jane.doe@acme.corp',
+          jobTitle: 'Engineer',
+          department: 'Engineering',
+          country: 'United States',
+          currency: 'USD',
+          salary: 120000,
+          hireDate: '2023-05-10',
+        }}
+        filterOptions={filterOptions}
+        onSuccess={() => {}}
+        onError={() => {}}
+      />
+    );
+
+    expect(
+      (document.getElementById('form-firstName') as HTMLInputElement).value
+    ).toBe('Jane');
+
+    rerender(
+      <QueryClientProvider client={new QueryClient()}>
+        <BrowserRouter>
+          <EmployeeForm
+            open
+            onClose={() => {}}
+            employee={{
+              id: 2,
+              firstName: 'John',
+              lastName: 'Smith',
+              email: 'john.smith@acme.corp',
+              jobTitle: 'Manager',
+              department: 'Sales',
+              country: 'Germany',
+              currency: 'EUR',
+              salary: 95000,
+              hireDate: '2022-01-15',
+            }}
+            filterOptions={filterOptions}
+            onSuccess={() => {}}
+            onError={() => {}}
+          />
+        </BrowserRouter>
+      </QueryClientProvider>
+    );
+
+    expect(
+      (document.getElementById('form-firstName') as HTMLInputElement).value
+    ).toBe('John');
+    expect(
+      (document.getElementById('form-lastName') as HTMLInputElement).value
+    ).toBe('Smith');
+    expect(
+      (document.getElementById('form-currency') as HTMLInputElement).value
+    ).toBe('EUR');
+    expect(
+      (document.getElementById('form-salary') as HTMLInputElement).value
+    ).toBe('95000');
   });
 
   it('calls onSuccess with valid data on submit', async () => {
