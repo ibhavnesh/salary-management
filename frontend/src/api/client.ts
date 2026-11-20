@@ -19,7 +19,8 @@ const API_BASE = import.meta.env.VITE_API_URL || (
 );
 
 function buildUrl(path: string, params?: Record<string, string | number | undefined>): string {
-  const url = new URL(`${API_BASE}${path}`);
+  // FIX: second argument lets a relative path (production, same origin) resolve correctly
+  const url = new URL(`${API_BASE}${path}`, window.location.origin);
   if (params) {
     for (const [key, value] of Object.entries(params)) {
       if (value !== undefined && value !== '') {
