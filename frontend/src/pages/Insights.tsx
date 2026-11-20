@@ -151,12 +151,23 @@ function OverviewTab() {
         </Grid>
 
         <Grid size={{ xs: 12, md: 5 }}>
-          <Paper sx={{ p: 3, border: '1px solid #E5E7EB', borderRadius: '10px', height: '100%' }}>
+          <Paper sx={{ p: { xs: 2, md: 3 }, border: '1px solid #E5E7EB', borderRadius: '10px', height: '100%' }}>
             <Typography variant="h6" component="h3" sx={{ fontWeight: 600, mb: 2, fontSize: '1rem' }}>
               Country Breakdown
             </Typography>
-            <TableContainer sx={{ maxHeight: 300, overflowY: 'auto' }}>
-              <Table size="small" stickyHeader aria-label="Headcount by country table">
+            <TableContainer
+              component={Paper}
+              variant="outlined"
+              sx={{
+                maxHeight: 300,
+                overflowX: 'auto',
+                width: '100%',
+                WebkitOverflowScrolling: 'touch',
+                border: '1px solid #E5E7EB',
+                borderRadius: '8px',
+              }}
+            >
+              <Table size="small" stickyHeader aria-label="Headcount by country table" sx={{ minWidth: { xs: 400, md: 'auto' } }}>
                 <TableHead>
                   <TableRow>
                     <TableCell>Country</TableCell>
@@ -167,9 +178,9 @@ function OverviewTab() {
                 <TableBody>
                   {data.byCountry.map((row) => (
                     <TableRow key={row.country} hover>
-                      <TableCell sx={{ fontWeight: 500 }}>{row.country}</TableCell>
-                      <TableCell sx={{ color: '#6B7280' }}>{row.currency}</TableCell>
-                      <TableCell align="right" sx={{ fontWeight: 600 }}>{row.headcount.toLocaleString()}</TableCell>
+                      <TableCell sx={{ fontWeight: 500, whiteSpace: { xs: 'nowrap', md: 'normal' } }}>{row.country}</TableCell>
+                      <TableCell sx={{ color: '#6B7280', whiteSpace: { xs: 'nowrap', md: 'normal' } }}>{row.currency}</TableCell>
+                      <TableCell align="right" sx={{ fontWeight: 600, whiteSpace: { xs: 'nowrap', md: 'normal' } }}>{row.headcount.toLocaleString()}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -386,8 +397,19 @@ function CountryDeepDiveTab({ countries }: { countries: string[] }) {
                     Highest Paid ({extremesQuery.data.currency})
                   </Typography>
                 </Box>
-                <TableContainer sx={{ maxHeight: 350, overflowY: 'auto' }}>
-                  <Table size="small" stickyHeader aria-label="Highest paid employees">
+                <TableContainer
+                  component={Paper}
+                  variant="outlined"
+                  sx={{
+                    maxHeight: 350,
+                    overflowX: 'auto',
+                    width: '100%',
+                    WebkitOverflowScrolling: 'touch',
+                    border: 'none',
+                    borderRadius: 0,
+                  }}
+                >
+                  <Table size="small" stickyHeader aria-label="Highest paid employees" sx={{ minWidth: { xs: 520, md: 'auto' } }}>
                     <TableHead>
                       <TableRow>
                         <TableCell>Name</TableCell>
@@ -398,11 +420,11 @@ function CountryDeepDiveTab({ countries }: { countries: string[] }) {
                     <TableBody>
                       {extremesQuery.data.highestPaid.map((emp) => (
                         <TableRow key={emp.id} hover>
-                          <TableCell sx={{ fontWeight: 500 }}>
+                          <TableCell sx={{ fontWeight: 500, whiteSpace: { xs: 'nowrap', md: 'normal' } }}>
                             {emp.firstName} {emp.lastName}
                           </TableCell>
-                          <TableCell sx={{ color: '#4B5563' }}>{emp.jobTitle}</TableCell>
-                          <TableCell align="right" sx={{ fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>
+                          <TableCell sx={{ color: '#4B5563', whiteSpace: { xs: 'nowrap', md: 'normal' } }}>{emp.jobTitle}</TableCell>
+                          <TableCell align="right" sx={{ fontWeight: 600, fontVariantNumeric: 'tabular-nums', whiteSpace: { xs: 'nowrap', md: 'normal' } }}>
                             {formatSalary(emp.salary, extremesQuery.data.currency)}
                           </TableCell>
                         </TableRow>
@@ -420,8 +442,19 @@ function CountryDeepDiveTab({ countries }: { countries: string[] }) {
                     Lowest Paid ({extremesQuery.data.currency})
                   </Typography>
                 </Box>
-                <TableContainer sx={{ maxHeight: 350, overflowY: 'auto' }}>
-                  <Table size="small" stickyHeader aria-label="Lowest paid employees">
+                <TableContainer
+                  component={Paper}
+                  variant="outlined"
+                  sx={{
+                    maxHeight: 350,
+                    overflowX: 'auto',
+                    width: '100%',
+                    WebkitOverflowScrolling: 'touch',
+                    border: 'none',
+                    borderRadius: 0,
+                  }}
+                >
+                  <Table size="small" stickyHeader aria-label="Lowest paid employees" sx={{ minWidth: { xs: 520, md: 'auto' } }}>
                     <TableHead>
                       <TableRow>
                         <TableCell>Name</TableCell>
@@ -432,11 +465,11 @@ function CountryDeepDiveTab({ countries }: { countries: string[] }) {
                     <TableBody>
                       {extremesQuery.data.lowestPaid.map((emp) => (
                         <TableRow key={emp.id} hover>
-                          <TableCell sx={{ fontWeight: 500 }}>
+                          <TableCell sx={{ fontWeight: 500, whiteSpace: { xs: 'nowrap', md: 'normal' } }}>
                             {emp.firstName} {emp.lastName}
                           </TableCell>
-                          <TableCell sx={{ color: '#4B5563' }}>{emp.jobTitle}</TableCell>
-                          <TableCell align="right" sx={{ fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>
+                          <TableCell sx={{ color: '#4B5563', whiteSpace: { xs: 'nowrap', md: 'normal' } }}>{emp.jobTitle}</TableCell>
+                          <TableCell align="right" sx={{ fontWeight: 600, fontVariantNumeric: 'tabular-nums', whiteSpace: { xs: 'nowrap', md: 'normal' } }}>
                             {formatSalary(emp.salary, extremesQuery.data.currency)}
                           </TableCell>
                         </TableRow>
@@ -502,8 +535,19 @@ export default function InsightsPage() {
 
 export function SalaryStatsTable({ rows }: { rows: SalaryStatsGroup[] }) {
   return (
-    <TableContainer component={Paper} variant="outlined" data-testid="salary-stats-table" sx={{ border: '1px solid #E5E7EB', borderRadius: '10px' }}>
-      <Table size="small" stickyHeader aria-label="Salary statistics table">
+    <TableContainer
+      component={Paper}
+      variant="outlined"
+      data-testid="salary-stats-table"
+      sx={{
+        border: '1px solid #E5E7EB',
+        borderRadius: '10px',
+        overflowX: 'auto',
+        width: '100%',
+        WebkitOverflowScrolling: 'touch',
+      }}
+    >
+      <Table size="small" stickyHeader aria-label="Salary statistics table" sx={{ minWidth: { xs: 640, md: 'auto' } }}>
         <TableHead>
           <TableRow>
             <TableCell>Group</TableCell>
@@ -518,13 +562,13 @@ export function SalaryStatsTable({ rows }: { rows: SalaryStatsGroup[] }) {
         <TableBody>
           {rows.map((row) => (
             <TableRow key={`${row.group}-${row.currency}`} hover>
-              <TableCell sx={{ fontWeight: 500 }}>{row.group}</TableCell>
-              <TableCell sx={{ color: '#6B7280' }}>{row.currency}</TableCell>
-              <TableCell align="right">{row.headcount.toLocaleString()}</TableCell>
-              <TableCell align="right">{formatSalary(row.min, row.currency)}</TableCell>
-              <TableCell align="right" sx={{ fontWeight: 600 }}>{formatSalary(row.average, row.currency)}</TableCell>
-              <TableCell align="right">{formatSalary(row.median, row.currency)}</TableCell>
-              <TableCell align="right">{formatSalary(row.max, row.currency)}</TableCell>
+              <TableCell sx={{ fontWeight: 500, whiteSpace: { xs: 'nowrap', md: 'normal' } }}>{row.group}</TableCell>
+              <TableCell sx={{ color: '#6B7280', whiteSpace: { xs: 'nowrap', md: 'normal' } }}>{row.currency}</TableCell>
+              <TableCell align="right" sx={{ whiteSpace: { xs: 'nowrap', md: 'normal' } }}>{row.headcount.toLocaleString()}</TableCell>
+              <TableCell align="right" sx={{ whiteSpace: { xs: 'nowrap', md: 'normal' } }}>{formatSalary(row.min, row.currency)}</TableCell>
+              <TableCell align="right" sx={{ fontWeight: 600, whiteSpace: { xs: 'nowrap', md: 'normal' } }}>{formatSalary(row.average, row.currency)}</TableCell>
+              <TableCell align="right" sx={{ whiteSpace: { xs: 'nowrap', md: 'normal' } }}>{formatSalary(row.median, row.currency)}</TableCell>
+              <TableCell align="right" sx={{ whiteSpace: { xs: 'nowrap', md: 'normal' } }}>{formatSalary(row.max, row.currency)}</TableCell>
             </TableRow>
           ))}
         </TableBody>

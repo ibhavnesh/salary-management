@@ -99,10 +99,12 @@ export default function EmployeeTable({
       sx={{
         border: '1px solid #E5E7EB',
         borderRadius: '10px',
-        overflow: 'hidden',
+        overflowX: 'auto',
+        width: '100%',
+        WebkitOverflowScrolling: 'touch',
       }}
     >
-      <Table size="small" stickyHeader sx={{ minWidth: 800 }}>
+      <Table size="small" stickyHeader sx={{ minWidth: { xs: 720, md: 800 } }}>
         <TableHead>
           <TableRow>
             {sortableColumns.map((col) => {
@@ -219,16 +221,16 @@ export default function EmployeeTable({
                   <TableCell align="right">
                     <Typography
                       variant="body2"
-                      sx={{ fontWeight: 600, fontVariantNumeric: 'tabular-nums', color: '#111827' }}
+                      sx={{ fontWeight: 600, fontVariantNumeric: 'tabular-nums', color: '#111827', whiteSpace: { xs: 'nowrap', md: 'normal' } }}
                     >
                       {formatSalary(emp.salary, emp.currency)}
                     </Typography>
-                    <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', lineHeight: 1 }}>
+                    <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', lineHeight: 1, whiteSpace: { xs: 'nowrap', md: 'normal' } }}>
                       {emp.currency}
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2" sx={{ color: '#4B5563' }}>
+                    <Typography variant="body2" sx={{ color: '#4B5563', whiteSpace: { xs: 'nowrap', md: 'normal' } }}>
                       {emp.hireDate}
                     </Typography>
                   </TableCell>

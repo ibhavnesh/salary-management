@@ -178,13 +178,13 @@ export default function EmployeesPage() {
     <Box>
       {/* Header Row */}
       <Stack
-        direction="row"
+        direction={{ xs: 'column', sm: 'row' }}
         justifyContent="space-between"
-        alignItems="center"
-        sx={{ mb: 3 }}
+        alignItems={{ xs: 'flex-start', sm: 'center' }}
+        sx={{ mb: 3, gap: { xs: 2, sm: 0 } }}
       >
         <Box>
-          <Typography variant="h5" component="h1" sx={{ fontWeight: 700, color: '#111827', letterSpacing: '-0.025em' }}>
+          <Typography variant="h5" component="h1" sx={{ fontWeight: 700, color: '#111827', letterSpacing: '-0.025em', fontSize: { xs: '1.25rem', md: '1.5rem' } }}>
             Employees
           </Typography>
           <Typography variant="body2" sx={{ color: '#6B7280', mt: 0.5 }}>
@@ -195,7 +195,7 @@ export default function EmployeesPage() {
           variant="contained"
           startIcon={<AddIcon />}
           onClick={handleAdd}
-          sx={{ backgroundColor: '#2563EB', '&:hover': { backgroundColor: '#1D4ED8' }, boxShadow: 'none' }}
+          sx={{ backgroundColor: '#2563EB', '&:hover': { backgroundColor: '#1D4ED8' }, boxShadow: 'none', whiteSpace: 'nowrap', flexShrink: 0, width: { xs: '100%', sm: 'auto' } }}
         >
           Add employee
         </Button>
